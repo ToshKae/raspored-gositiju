@@ -471,33 +471,9 @@
 
   <script src="data.js"></script>
   <script>
-    const STORAGE_KEY = 'guest_overrides';
-
     // --- Helpers ---
     function gName(g) { return typeof g === 'string' ? g : (g ? g.name || '' : ''); }
     function gGroup(g) { return typeof g === 'string' ? null : (g ? g.group || null : null); }
-
-    function loadOverrides() {
-      try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}'); }
-      catch { return {}; }
-    }
-
-    function saveOverride(tableId, seatIdx, name) {
-      const ov = loadOverrides();
-      ov[`${tableId}-${seatIdx}`] = name;
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(ov));
-    }
-
-    function applyOverrides() {
-      const ov = loadOverrides();
-      TABLES.forEach(t => {
-        t.guests.forEach((g, i) => {
-          const key = `${t.id}-${i}`;
-          if (!(key in ov)) return;
-          t.guests[i] = typeof g === 'string' ? ov[key] : { ...g, name: ov[key] };
-        });
-      });
-    }
 
     // Groups consecutive (and non-consecutive) guests by group key.
     // Returns array of { type: 'single'|'merged', ... }
@@ -660,7 +636,6 @@
       const table = TABLES.find(t => t.id === tableId);
       const g = table.guests[seatIdx];
       table.guests[seatIdx] = typeof g === 'string' ? newName : { ...g, name: newName };
-      saveOverride(tableId, seatIdx, newName);
 
       el.classList.remove('editing', 'empty');
 
@@ -745,7 +720,6 @@
       document.getElementById('noResults').style.display = (q && !anyVisible) ? 'block' : 'none';
     }
 
-    applyOverrides();
     buildTables();
   </script>
 </body>
