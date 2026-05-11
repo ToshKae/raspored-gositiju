@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html lang="sr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Raspored gostiju</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background: #fdf6f0;
+      min-height: 100vh;
+      color: #1a1a1a;
+      transition: background 0.3s ease, color 0.3s ease;
+    }
+
+    body.dark {
+      background: #141414;
+      color: #f0f0f0;
+    }
+
+    .container {
+      max-width: 520px;
+      margin: 0 auto;
+      padding: 48px 20px 60px;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 36px;
+      animation: fadeUp 0.8s ease-out;
+    }
+
+    .title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.75rem;
+      font-weight: 600;
+      color: #1a1a1a;
+      letter-spacing: 0.08em;
+      margin: 0;
+      transition: color 0.3s ease;
+    }
+
+    body.dark .title { color: #f0f0f0; }
+    .title span { color: #d4af37; }
+
+    .title-subtitle {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.78rem;
+      font-weight: 300;
+      color: #aaa;
+      letter-spacing: 0.06em;
+      margin: 8px 0 0;
+    }
+
+    body.dark .title-subtitle { color: #555; }
+
+    .header-row {
+      display: flex;
+      align-items: baseline;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .theme-toggle {
+      display: flex;
+      background: #e8ddd4;
+      border-radius: 20px;
+      padding: 3px;
+      border: none;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    body.dark .theme-toggle { background: #2a2a2a; }
+
+    .theme-toggle .opt {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.62rem;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      padding: 3px 9px;
+      border-radius: 16px;
+      color: #aaa;
+      transition: background 0.25s ease, color 0.25s ease;
+      user-select: none;
+    }
+
+    .theme-toggle .opt.active {
+      background: #fff;
+      color: #1a1a1a;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.12);
+    }
+
+    body.dark .theme-toggle .opt.active {
+      background: #3a3a3a;
+      color: #f0f0f0;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.4);
+    }
+
+    .search-wrap {
+      margin-bottom: 28px;
+      animation: fadeUp 0.8s ease-out 0.1s both;
+    }
+
+    .search-input {
+      width: 100%;
+      padding: 10px 16px;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.88rem;
+      font-weight: 400;
+      border: 1px solid rgba(212,175,55,0.3);
+      border-radius: 10px;
+      background: #fff;
+      color: #1a1a1a;
+      outline: none;
+      transition: border-color 0.2s ease, background 0.3s ease, color 0.3s ease;
+    }
+
+    .search-input::placeholder { color: #bbb; }
+    .search-input:focus { border-color: #d4af37; }
+
+    body.dark .search-input {
+      background: #1f1f1f;
+      color: #f0f0f0;
+      border-color: rgba(212,175,55,0.2);
+    }
+
+    body.dark .search-input::placeholder { color: #555; }
+
+    .timeline { position: relative; }
+
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 40px;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: linear-gradient(to bottom, transparent, #e8d5b0 40px, #e8d5b0 calc(100% - 40px), transparent);
+      transition: background 0.3s ease;
+    }
+
+    body.dark .timeline::before {
+      background: linear-gradient(to bottom, transparent, #3a3020 40px, #3a3020 calc(100% - 40px), transparent);
+    }
+
+    .block {
+      display: flex;
+      margin-bottom: 28px;
+      position: relative;
+      animation: fadeUp 0.8s ease-out both;
+    }
+
+    .block.hidden { display: none; }
+
+    .num-col {
+      width: 40px;
+      flex-shrink: 0;
+      text-align: right;
+      padding-top: 2px;
+      padding-right: 6px;
+    }
+
+    .table-num {
+      font-family: 'Courier New', monospace;
+      font-size: 0.9rem;
+      color: #888;
+      font-weight: 700;
+      letter-spacing: 0.03em;
+      transition: color 0.3s ease;
+    }
+
+    body.dark .table-num { color: #666; }
+
+    .table-count {
+      font-size: 0.66rem;
+      color: #bbb;
+      margin-top: 3px;
+      font-weight: 300;
+      transition: color 0.3s ease;
+    }
+
+    body.dark .table-count { color: #555; }
+
+    .dot {
+      position: absolute;
+      left: 34px;
+      top: 5px;
+      width: 13px;
+      height: 13px;
+      border-radius: 50%;
+      border: 2px solid #d4af37;
+      background: #fdf6f0;
+      transition: background 0.3s ease;
+    }
+
+    body.dark .dot { background: #141414; }
+
+    .content {
+      flex: 1;
+      padding-left: 24px;
+    }
+
+    .block-label {
+      display: inline-block;
+      font-size: 0.65rem;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 2px 8px;
+      border-radius: 20px;
+      margin-bottom: 8px;
+      background: rgba(212, 175, 55, 0.12);
+      color: #b8942a;
+      transition: background 0.3s ease, color 0.3s ease;
+    }
+
+    body.dark .block-label {
+      background: rgba(212, 175, 55, 0.15);
+      color: #c9a432;
+    }
+
+    .block-subtitle {
+      font-size: 0.78rem;
+      font-weight: 300;
+      color: #aaa;
+      margin: -2px 0 8px;
+      letter-spacing: 0.02em;
+      font-style: italic;
+      transition: color 0.3s ease;
+    }
+
+    body.dark .block-subtitle { color: #555; }
+
+    .table-total {
+      margin-top: 8px;
+      font-size: 0.72rem;
+      font-weight: 500;
+      color: #b8942a;
+      letter-spacing: 0.06em;
+      text-align: right;
+      transition: color 0.3s ease;
+    }
+
+    body.dark .table-total { color: #c9a432; }
+
+    /* Guests grid */
+    .guests {
+      list-style: none;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4px;
+    }
+
+    .guests li {
+      font-size: 0.85rem;
+      font-weight: 400;
+      color: #555;
+      padding: 6px 8px 6px 10px;
+      background: #fff;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+      transition: background 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
+      min-height: 34px;
+      cursor: default;
+    }
+
+    .guests li:not(.empty):hover { box-shadow: 0 1px 6px rgba(0,0,0,0.1); }
+
+    body.dark .guests li {
+      background: #1f1f1f;
+      color: #bbb;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+    }
+
+    .guests li .seat-num {
+      font-size: 0.65rem;
+      color: #ccc;
+      width: 14px;
+      text-align: right;
+      flex-shrink: 0;
+      font-family: 'Courier New', monospace;
+      transition: color 0.3s ease;
+    }
+
+    body.dark .guests li .seat-num { color: #555; }
+
+    .guests li .guest-name {
+      flex: 1;
+      min-width: 0;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .guests li.empty .guest-name {
+      color: #ddd;
+      font-style: italic;
+      font-size: 0.78rem;
+    }
+
+    body.dark .guests li.empty .guest-name { color: #3a3a3a; }
+
+    /* Edit icon */
+    .edit-icon {
+      margin-left: auto;
+      flex-shrink: 0;
+      opacity: 0;
+      cursor: pointer;
+      font-size: 0.7rem;
+      color: #ccc;
+      transition: opacity 0.15s, color 0.15s;
+      padding: 2px;
+      line-height: 1;
+      user-select: none;
+    }
+
+    .guests li:hover .edit-icon,
+    .merged-row:hover .edit-icon { opacity: 1; }
+    .guests li:hover .edit-icon:hover,
+    .merged-row:hover .edit-icon:hover { color: #d4af37; }
+    body.dark .edit-icon { color: #444; }
+    body.dark .guests li:hover .edit-icon:hover,
+    body.dark .merged-row:hover .edit-icon:hover { color: #d4af37; }
+
+    /* Edit mode */
+    .guests li.editing,
+    .merged-row.editing {
+      border: 1px solid rgba(212,175,55,0.5);
+      box-shadow: 0 0 0 2px rgba(212,175,55,0.1);
+      border-radius: 6px;
+    }
+
+    .guest-input {
+      flex: 1;
+      min-width: 0;
+      border: none;
+      border-bottom: 1px solid #d4af37;
+      outline: none;
+      background: transparent;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.85rem;
+      color: #1a1a1a;
+      padding: 0;
+    }
+
+    body.dark .guest-input { color: #f0f0f0; }
+
+    .action-btn {
+      flex-shrink: 0;
+      cursor: pointer;
+      font-size: 0.78rem;
+      padding: 1px 3px;
+      user-select: none;
+      line-height: 1;
+      border-radius: 3px;
+    }
+
+    .save-btn { color: #d4af37; }
+    .save-btn:hover { color: #b8942a; }
+    .cancel-btn { color: #ccc; }
+    .cancel-btn:hover { color: #888; }
+
+    /* Merged cells */
+    .guests li.merged {
+      grid-column: span 2;
+      flex-direction: column;
+      align-items: stretch;
+      padding: 0;
+      gap: 0;
+      overflow: hidden;
+      border-left: 2px solid rgba(212,175,55,0.35);
+    }
+
+    body.dark .guests li.merged { border-left-color: rgba(212,175,55,0.2); }
+
+    .merged-row {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      padding: 5px 8px 5px 10px;
+      min-height: 30px;
+      cursor: default;
+    }
+
+    .merged-row + .merged-row { border-top: 1px solid rgba(0,0,0,0.05); }
+    body.dark .merged-row + .merged-row { border-top-color: rgba(255,255,255,0.04); }
+
+    .guests li.merged.highlight { border: 1px solid rgba(212,175,55,0.5); border-left-width: 3px; }
+
+    /* Highlight from search */
+    .guests li.highlight {
+      border: 1px solid rgba(212,175,55,0.5);
+      box-shadow: 0 0 10px rgba(212,175,55,0.15);
+    }
+
+    .no-results {
+      text-align: center;
+      padding: 40px 0;
+      font-size: 0.85rem;
+      color: #bbb;
+      font-style: italic;
+      font-weight: 300;
+    }
+
+    body.dark .no-results { color: #444; }
+
+    .summary {
+      text-align: center;
+      font-size: 0.75rem;
+      color: #aaa;
+      letter-spacing: 0.06em;
+      margin-bottom: 24px;
+      animation: fadeUp 0.8s ease-out 0.15s both;
+    }
+
+    body.dark .summary { color: #555; }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 480px) {
+      .header { margin-bottom: 24px; }
+      .title { font-size: 1.4rem; }
+      .container { padding-left: 12px; padding-right: 12px; }
+      .guests { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+
+    <header class="header">
+      <div class="header-row">
+        <h1 class="title">Raspored <span>gostiju</span></h1>
+        <button class="theme-toggle" onclick="toggleTheme()">
+          <span class="opt active" id="opt-light">Svetla</span>
+          <span class="opt" id="opt-dark">Tamna</span>
+        </button>
+      </div>
+      <p class="title-subtitle">31. maj 2026. · Nešvil svečana sala</p>
+      <hr style="border:none;border-top:1px solid rgba(212,175,55,0.3);margin-top:14px;">
+    </header>
+
+    <div class="search-wrap">
+      <input
+        class="search-input"
+        type="search"
+        id="searchInput"
+        placeholder="Pretraži gosta po imenu..."
+        oninput="filterGuests(this.value)"
+        autocomplete="off"
+      />
+    </div>
+
+    <div class="summary" id="summary"></div>
+    <div class="timeline" id="timeline"></div>
+    <div class="no-results" id="noResults" style="display:none;">Nije pronađen nijedan gost.</div>
+
+  </div>
+
+  <script src="data.js"></script>
+  <script>
+    const STORAGE_KEY = 'guest_overrides';
+
+    // --- Helpers ---
+    function gName(g) { return typeof g === 'string' ? g : (g ? g.name || '' : ''); }
+    function gGroup(g) { return typeof g === 'string' ? null : (g ? g.group || null : null); }
+
+    function loadOverrides() {
+      try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}'); }
+      catch { return {}; }
+    }
+
+    function saveOverride(tableId, seatIdx, name) {
+      const ov = loadOverrides();
+      ov[`${tableId}-${seatIdx}`] = name;
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(ov));
+    }
+
+    function applyOverrides() {
+      const ov = loadOverrides();
+      TABLES.forEach(t => {
+        t.guests.forEach((g, i) => {
+          const key = `${t.id}-${i}`;
+          if (!(key in ov)) return;
+          t.guests[i] = typeof g === 'string' ? ov[key] : { ...g, name: ov[key] };
+        });
+      });
+    }
+
+    // Groups consecutive (and non-consecutive) guests by group key.
+    // Returns array of { type: 'single'|'merged', ... }
+    function processGuests(guests) {
+      const seenGroups = new Set();
+      const result = [];
+      guests.forEach((g, idx) => {
+        const name = gName(g);
+        const group = gGroup(g);
+        if (!group) {
+          result.push({ type: 'single', seatIdx: idx, name });
+        } else if (!seenGroups.has(group)) {
+          seenGroups.add(group);
+          const members = guests
+            .map((x, i) => ({ seatIdx: i, name: gName(x), group: gGroup(x) }))
+            .filter(x => x.group === group);
+          result.push({ type: 'merged', group, members });
+        }
+      });
+      return result;
+    }
+
+    // --- Theme ---
+    function toggleTheme() {
+      const dark = document.body.classList.toggle('dark');
+      document.getElementById('opt-light').classList.toggle('active', !dark);
+      document.getElementById('opt-dark').classList.toggle('active', dark);
+      localStorage.setItem('theme', dark ? 'dark' : 'light');
+    }
+
+    if (localStorage.getItem('theme') === 'dark') {
+      document.body.classList.add('dark');
+      document.getElementById('opt-light').classList.remove('active');
+      document.getElementById('opt-dark').classList.add('active');
+    }
+
+    // --- Render helpers ---
+    function makeRowContent(seatIdx, name, isEmpty) {
+      if (isEmpty) {
+        return `<span class="seat-num">${seatIdx + 1}</span><span class="guest-name">—</span><span class="edit-icon" title="Uredi">✏</span>`;
+      }
+      return `<span class="seat-num">${seatIdx + 1}</span><span class="guest-name">${name}</span><span class="edit-icon" title="Uredi">✏</span>`;
+    }
+
+    function bindRow(el, tableId, seatIdx) {
+      el.dataset.table = tableId;
+      el.dataset.seat = seatIdx;
+      el.querySelector('.edit-icon').addEventListener('click', e => { e.stopPropagation(); startEdit(el); });
+      el.addEventListener('dblclick', () => startEdit(el));
+    }
+
+    function renderSingleLi(tableId, seatIdx, name) {
+      const li = document.createElement('li');
+      const hide = tableId === 0 && !name.trim();
+      if (hide) { li.style.display = 'none'; li.dataset.table = tableId; li.dataset.seat = seatIdx; return li; }
+      const isEmpty = !name.trim();
+      if (isEmpty) li.classList.add('empty');
+      else li.dataset.name = name.toLowerCase();
+      li.innerHTML = makeRowContent(seatIdx, name, isEmpty);
+      bindRow(li, tableId, seatIdx);
+      return li;
+    }
+
+    function renderMergedLi(tableId, members) {
+      const li = document.createElement('li');
+      li.classList.add('merged');
+      // data-names for search
+      li.dataset.names = members.map(m => m.name.toLowerCase()).join(' ');
+
+      members.forEach(m => {
+        const row = document.createElement('div');
+        row.className = 'merged-row';
+        row.innerHTML = makeRowContent(m.seatIdx, m.name, false);
+        row.dataset.name = m.name.toLowerCase();
+        bindRow(row, tableId, m.seatIdx);
+        li.appendChild(row);
+      });
+
+      return li;
+    }
+
+    // --- Build ---
+    function buildTables() {
+      const timeline = document.getElementById('timeline');
+      const totalGuests = TABLES.reduce((s, t) => s + t.guests.filter(g => gName(g).trim()).length, 0);
+      document.getElementById('summary').textContent =
+        `${TABLES.length} stolova · ${totalGuests} gostiju raspoređeno`;
+
+      timeline.innerHTML = '';
+
+      TABLES.forEach((table, idx) => {
+        const filled = table.guests.filter(g => gName(g).trim()).length;
+        const block = document.createElement('div');
+        block.className = 'block';
+        block.id = `table-${table.id}`;
+        block.style.animationDelay = `${(idx * 0.04).toFixed(2)}s`;
+
+        block.innerHTML = `
+          <div class="num-col">
+            <div class="table-num">${table.id === 0 ? '★' : String(table.id).padStart(2, '0')}</div>
+            <div class="table-count">${filled}/12</div>
+          </div>
+          <div class="dot"></div>
+          <div class="content">
+            <span class="block-label">${table.label}</span>
+            ${table.subtitle ? `<div class="block-subtitle">${table.subtitle}</div>` : ''}
+          </div>`;
+
+        const ul = document.createElement('ul');
+        ul.className = 'guests';
+
+        processGuests(table.guests).forEach(entry => {
+          if (entry.type === 'single') {
+            ul.appendChild(renderSingleLi(table.id, entry.seatIdx, entry.name));
+          } else {
+            ul.appendChild(renderMergedLi(table.id, entry.members));
+          }
+        });
+
+        const countBar = document.createElement('div');
+        countBar.className = 'table-total';
+        countBar.textContent = `${filled} / 12 gostiju`;
+
+        const content = block.querySelector('.content');
+        content.appendChild(ul);
+        content.appendChild(countBar);
+        timeline.appendChild(block);
+      });
+    }
+
+    // --- Edit ---
+    function startEdit(el) {
+      if (el.classList.contains('editing')) return;
+      const seatNum = el.querySelector('.seat-num').textContent;
+      const nameEl = el.querySelector('.guest-name');
+      const prevName = (nameEl && !el.classList.contains('empty')) ? nameEl.textContent : '';
+
+      el.classList.add('editing');
+      el.innerHTML = `
+        <span class="seat-num">${seatNum}</span>
+        <input class="guest-input" value="${prevName}" placeholder="Ime gosta...">
+        <span class="save-btn action-btn" title="Sačuvaj">✓</span>
+        <span class="cancel-btn action-btn" title="Otkaži">✕</span>`;
+
+      const input = el.querySelector('.guest-input');
+      input.focus();
+      input.select();
+      el.querySelector('.save-btn').onclick = () => commitEdit(el, prevName);
+      el.querySelector('.cancel-btn').onclick = () => abortEdit(el, prevName);
+      input.addEventListener('keydown', e => {
+        if (e.key === 'Enter') commitEdit(el, prevName);
+        if (e.key === 'Escape') abortEdit(el, prevName);
+      });
+    }
+
+    function commitEdit(el, prevName) {
+      const tableId = parseInt(el.dataset.table);
+      const seatIdx = parseInt(el.dataset.seat);
+      const newName = el.querySelector('.guest-input').value.trim();
+      const table = TABLES.find(t => t.id === tableId);
+      const g = table.guests[seatIdx];
+      table.guests[seatIdx] = typeof g === 'string' ? newName : { ...g, name: newName };
+      saveOverride(tableId, seatIdx, newName);
+
+      el.classList.remove('editing', 'empty');
+
+      const isMergedRow = el.classList.contains('merged-row');
+      if (isMergedRow) {
+        el.innerHTML = makeRowContent(seatIdx, newName, false);
+        el.dataset.name = newName.toLowerCase();
+        bindRow(el, tableId, seatIdx);
+        // update parent merged li data-names
+        const parentLi = el.closest('li.merged');
+        if (parentLi) {
+          const allNames = [...parentLi.querySelectorAll('.merged-row')].map(r => r.dataset.name || '').join(' ');
+          parentLi.dataset.names = allNames;
+        }
+      } else {
+        const fresh = renderSingleLi(tableId, seatIdx, newName);
+        el.replaceWith(fresh);
+      }
+
+      updateCount(tableId);
+      updateSummary();
+    }
+
+    function abortEdit(el, prevName) {
+      const tableId = parseInt(el.dataset.table);
+      const seatIdx = parseInt(el.dataset.seat);
+      el.classList.remove('editing');
+      const isMergedRow = el.classList.contains('merged-row');
+      if (isMergedRow) {
+        el.innerHTML = makeRowContent(seatIdx, prevName, false);
+        el.dataset.name = prevName.toLowerCase();
+        bindRow(el, tableId, seatIdx);
+      } else {
+        const fresh = renderSingleLi(tableId, seatIdx, prevName);
+        el.replaceWith(fresh);
+      }
+    }
+
+    function updateCount(tableId) {
+      const block = document.getElementById(`table-${tableId}`);
+      if (!block) return;
+      const filled = block.querySelectorAll('.guests li[data-name], .merged-row[data-name]').length;
+      block.querySelector('.table-count').textContent = `${filled}/12`;
+      block.querySelector('.table-total').textContent = `${filled} / 12 gostiju`;
+    }
+
+    function updateSummary() {
+      const total = TABLES.reduce((s, t) => s + t.guests.filter(g => gName(g).trim()).length, 0);
+      document.getElementById('summary').textContent =
+        `${TABLES.length} stolova · ${total} gostiju raspoređeno`;
+    }
+
+    // --- Search ---
+    function filterGuests(query) {
+      const q = query.trim().toLowerCase();
+      let anyVisible = false;
+
+      document.querySelectorAll('.block').forEach(block => {
+        if (!q) {
+          block.classList.remove('hidden');
+          block.querySelectorAll('.guests li, .merged-row').forEach(el => el.classList.remove('highlight'));
+          anyVisible = true;
+          return;
+        }
+        let match = false;
+        // single cells
+        block.querySelectorAll('.guests li[data-name]').forEach(li => {
+          const hit = li.dataset.name.includes(q);
+          li.classList.toggle('highlight', hit);
+          if (hit) match = true;
+        });
+        // merged cells — highlight whole li if any member matches
+        block.querySelectorAll('.guests li.merged').forEach(li => {
+          const hit = li.dataset.names.includes(q);
+          li.classList.toggle('highlight', hit);
+          if (hit) match = true;
+        });
+        block.classList.toggle('hidden', !match);
+        if (match) anyVisible = true;
+      });
+
+      document.getElementById('noResults').style.display = (q && !anyVisible) ? 'block' : 'none';
+    }
+
+    applyOverrides();
+    buildTables();
+  </script>
+</body>
+</html>
