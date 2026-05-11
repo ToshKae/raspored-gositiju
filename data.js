@@ -14,16 +14,16 @@ const TABLES = [
     subtitle: "Jovan i društvo",
     guests: [
       { name: "Vlade",        group: "vlade" },
-      { name: "Vlade žena",   group: "vlade" },
+      { name: "Vlade Žena",   group: "vlade" },
       { name: "Jovan",        group: "jovic" },
       { name: "Sofija",       group: "jovic" },
       { name: "Iskra",        group: "jovic" },
       { name: "Stefan",       group: "stefan" },
-      { name: "Stefan žena",  group: "stefan" },
-      { name: "Stefan dete",  group: "stefan" },
+      { name: "Stefan Žena",  group: "stefan" },
+      { name: "Stefan Dete",  group: "stefan" },
       { name: "Kum",          group: "kum" },
       { name: "Kuma",         group: "kum" },
-      { name: "Kum dete",     group: "kum" },
+      { name: "Kum Dete",     group: "kum" },
       ""
     ]
   },
@@ -64,15 +64,15 @@ const TABLES = [
     label: "Sto 5",
     guests: [
       { name: "Tamara",        group: "drugarice" },
-      { name: "Tamara sestra", group: "drugarice" },
+      { name: "Tamara Sestra", group: "drugarice" },
       { name: "Mina",          group: "drugarice" },
       { name: "Kaca",          group: "drugarice" },
       { name: "Nikolina",      group: "drugarice" },
       { name: "Tina",          group: "drugarice" },
-      "Kumina ćerka",
+      "Kumina Ćerka",
       "Anđela", "Miona",
       "Marija",
-      "Milena", "Milena muž"
+      "Milena", "Milena Muž"
     ]
   },
   {
@@ -87,7 +87,7 @@ const TABLES = [
       "Ivona", "Goran",
       "Jovana M.", "Jovana Đ.",
       "Maja",
-      "Nikolina", "Nikolina muž",
+      "Nikolina", "Nikolina Muž",
       "Verica Milošević", "Teodora",
       "", "", ""
     ]
@@ -97,7 +97,7 @@ const TABLES = [
     label: "Sto 8",
     guests: [
       "Bale", "Valentina",
-      "Linija", "Linija žena",
+      "Linija", "Linija Žena",
       "Peđa", "Rakić",
       "Stevan", "Rade",
       "Dragan", "Đorđe",
@@ -108,13 +108,23 @@ const TABLES = [
     id: 9,
     label: "Sto 9",
     subtitle: "Tošići",
-    guests: ["", "", "", "", "", "", "", "", "", "", "", ""]
+    guests: [
+      { name: "Nikola Pajić", group: "pajic" },
+      { name: "Valentina",    group: "pajic" },
+      { name: "Nikola Mutavdžić", group: "mutavdzic" },
+      { name: "Nikola Žena",     group: "mutavdzic" },
+      "", "", "", "", "", "", "", ""
+    ]
   },
   {
     id: 10,
     label: "Sto 10",
     subtitle: "Tobolac",
-    guests: ["", "", "", "", "", "", "", "", "", "", "", ""]
+    guests: [
+      { name: "Viktor", group: "viktor-irena" },
+      { name: "Irena",  group: "viktor-irena" },
+      "", "", "", "", "", "", "", "", "", ""
+    ]
   },
   {
     id: 11,
@@ -165,9 +175,9 @@ const TABLES = [
     id: 20,
     label: "Sto 20",
     guests: [
-      "Zorica", "Zorica dete",
+      "Zorica", "Zorica Dete",
       "Zoran", "Goca", "Dete", "Dete",
-      "Miroljub", "Miroljub žena", "Dete", "Dete", "Dete",
+      "Miroljub", "Miroljub Žena", "Dete", "Dete", "Dete",
       ""
     ]
   },
@@ -175,15 +185,15 @@ const TABLES = [
     id: 21,
     label: "Sto 21",
     guests: [
-      { name: "Aleksa",        group: "aleksa-devo" },
-      { name: "Aleksa devojka", group: "aleksa-devo" },
-      { name: "Goran",         group: "goran-devo" },
-      { name: "Goran devojka", group: "goran-devo" },
-      { name: "David",         group: "david-devo" },
-      { name: "David devojka", group: "david-devo" },
+      { name: "Aleksa",          group: "aleksa-devo" },
+      { name: "Aleksa Devojka",  group: "aleksa-devo" },
+      { name: "Goran",           group: "goran-devo" },
+      { name: "Goran Devojka",   group: "goran-devo" },
+      { name: "David",           group: "david-devo" },
+      { name: "David Devojka",   group: "david-devo" },
       "Aca Miodragović",
-      { name: "Ljubica",      group: "ljubica-muz" },
-      { name: "Ljubica muž",  group: "ljubica-muz" },
+      { name: "Ljubica",         group: "ljubica-muz" },
+      { name: "Ljubica Muž",     group: "ljubica-muz" },
       "Petar", "Milica",
       ""
     ]
@@ -194,15 +204,15 @@ const TABLES = [
     guests: [
       { name: "Džale", group: "dzale-masa" },
       { name: "Maša",  group: "dzale-masa" },
-      { name: "Mirko",   group: "mirko-kristina" },
+      { name: "Mirko",    group: "mirko-kristina" },
       { name: "Kristina", group: "mirko-kristina" },
       { name: "Miloš Milošanović", group: "milos-porodica" },
-      { name: "Miloš žena",        group: "milos-porodica" },
-      { name: "Miloš dete",        group: "milos-porodica" },
+      { name: "Miloš Žena",        group: "milos-porodica" },
+      { name: "Miloš Dete",        group: "milos-porodica" },
       { name: "Anita", group: "anita-jovan" },
       { name: "Jovan", group: "anita-jovan" },
       { name: "Nenad Dimitrijević", group: "nenad-dimi" },
-      { name: "Nenad devojka",      group: "nenad-dimi" },
+      { name: "Nenad Devojka",      group: "nenad-dimi" },
       ""
     ]
   },
