@@ -655,8 +655,9 @@
       const newName = el.querySelector('.guest-input').value.trim();
       const table = TABLES.find(t => t.id === tableId);
       const g = table.guests[seatIdx];
+      const group = gGroup(g) || '';
       table.guests[seatIdx] = typeof g === 'string' ? newName : { ...g, name: newName };
-      fetch(`${SCRIPT_URL}?action=write&stoId=${tableId}&sediste=${seatIdx + 1}&ime=${encodeURIComponent(newName)}`)
+      fetch(`${SCRIPT_URL}?action=write&stoId=${tableId}&sediste=${seatIdx + 1}&ime=${encodeURIComponent(newName)}&grupa=${encodeURIComponent(group)}`)
         .catch(err => console.warn('Sheets sync failed:', err));
 
       el.classList.remove('editing', 'empty');
