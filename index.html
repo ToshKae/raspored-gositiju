@@ -476,18 +476,22 @@
     function gName(g) { return typeof g === 'string' ? g : (g ? g.name || '' : ''); }
     function gGroup(g) { return typeof g === 'string' ? null : (g ? g.group || null : null); }
 
+    function tableCapacity(id) { return id === 0 ? 7 : 12; }
+
     function rowsToTables(rows) {
       const map = {};
       rows.forEach(row => {
         const id = parseInt(row['Sto ID']);
         if (!map[id]) {
-          map[id] = { id, label: String(row['Sto'] || ''), guests: new Array(12).fill('') };
+          const cap = tableCapacity(id);
+          map[id] = { id, label: String(row['Sto'] || ''), guests: new Array(cap).fill(''), capacity: cap };
           if (row['Podnaslov']) map[id].subtitle = String(row['Podnaslov']);
         }
         const seatIdx = parseInt(row['Sediste']) - 1;
         const name  = String(row['Ime']   || '').trim();
         const group = String(row['Grupa'] || '').trim();
-        if (seatIdx >= 0 && seatIdx < 12)
+        const cap = map[id].capacity;
+        if (seatIdx >= 0 && seatIdx < cap)
           map[id].guests[seatIdx] = group ? { name, group } : name;
       });
       return Object.values(map).sort((a, b) => a.id - b.id);
@@ -594,7 +598,7 @@
         block.innerHTML = `
           <div class="num-col">
             <div class="table-num">${table.id === 0 ? '★' : String(table.id).padStart(2, '0')}</div>
-            <div class="table-count">${filled}/12</div>
+            <div class="table-count">${filled}/${table.capacity}</div>
           </div>
           <div class="dot"></div>
           <div class="content">
@@ -615,7 +619,7 @@
 
         const countBar = document.createElement('div');
         countBar.className = 'table-total';
-        countBar.textContent = `${filled} / 12 gostiju`;
+        countBar.textContent = `${filled} / ${table.capacity} gostiju`;
 
         const content = block.querySelector('.content');
         content.appendChild(ul);
@@ -700,9 +704,11 @@
     function updateCount(tableId) {
       const block = document.getElementById(`table-${tableId}`);
       if (!block) return;
+      const table = TABLES.find(t => t.id === tableId);
+      const cap = table ? table.capacity : 12;
       const filled = block.querySelectorAll('.guests li[data-name], .merged-row[data-name]').length;
-      block.querySelector('.table-count').textContent = `${filled}/12`;
-      block.querySelector('.table-total').textContent = `${filled} / 12 gostiju`;
+      block.querySelector('.table-count').textContent = `${filled}/${cap}`;
+      block.querySelector('.table-total').textContent = `${filled} / ${cap} gostiju`;
     }
 
     function updateSummary() {
