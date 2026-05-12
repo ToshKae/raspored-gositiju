@@ -469,11 +469,31 @@
 
   </div>
 
-  <script src="data.js"></script>
   <script>
+    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbynu8a8mQcw8gB2O5KRAn-6xmcvTfZPrg5M8amU7QFlGD70jQVp0e4fO218RNHABbBm/exec';
+
     // --- Helpers ---
     function gName(g) { return typeof g === 'string' ? g : (g ? g.name || '' : ''); }
     function gGroup(g) { return typeof g === 'string' ? null : (g ? g.group || null : null); }
+
+    function rowsToTables(rows) {
+      const map = {};
+      rows.forEach(row => {
+        const id = parseInt(row['Sto ID']);
+        if (!map[id]) {
+          map[id] = { id, label: String(row['Sto'] || ''), guests: new Array(12).fill('') };
+          if (row['Podnaslov']) map[id].subtitle = String(row['Podnaslov']);
+        }
+        const seatIdx = parseInt(row['Sediste']) - 1;
+        const name  = String(row['Ime']   || '').trim();
+        const group = String(row['Grupa'] || '').trim();
+        if (seatIdx >= 0 && seatIdx < 12)
+          map[id].guests[seatIdx] = group ? { name, group } : name;
+      });
+      return Object.values(map).sort((a, b) => a.id - b.id);
+    }
+
+    let TABLES = [];
 
     // Groups consecutive (and non-consecutive) guests by group key.
     // Returns array of { type: 'single'|'merged', ... }
@@ -636,6 +656,8 @@
       const table = TABLES.find(t => t.id === tableId);
       const g = table.guests[seatIdx];
       table.guests[seatIdx] = typeof g === 'string' ? newName : { ...g, name: newName };
+      fetch(`${SCRIPT_URL}?action=write&stoId=${tableId}&sediste=${seatIdx + 1}&ime=${encodeURIComponent(newName)}`)
+        .catch(err => console.warn('Sheets sync failed:', err));
 
       el.classList.remove('editing', 'empty');
 
@@ -720,7 +742,23 @@
       document.getElementById('noResults').style.display = (q && !anyVisible) ? 'block' : 'none';
     }
 
-    buildTables();
+    function loadData() {
+      document.getElementById('timeline').innerHTML =
+        '<p style="padding:20px;color:#aaa;font-family:Montserrat,sans-serif">Učitavanje podataka...</p>';
+      fetch(SCRIPT_URL + '?action=read&t=' + Date.now())
+        .then(r => r.json())
+        .then(data => {
+          if (!data.ok) throw new Error(data.error);
+          TABLES = rowsToTables(data.rows);
+          buildTables();
+        })
+        .catch(err => {
+          document.getElementById('timeline').innerHTML =
+            '<p style="padding:20px;color:#c00;font-family:sans-serif">Greška pri učitavanju.<br><small>' + err + '</small></p>';
+        });
+    }
+
+    loadData();
   </script>
 </body>
 </html>
