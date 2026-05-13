@@ -396,6 +396,23 @@
 
     .guests li.merged.highlight { border: 1px solid rgba(212,175,55,0.5); border-left-width: 3px; }
 
+    /* Selection */
+    .guests li.selected,
+    .merged-row.selected {
+      background: rgba(70,130,180,0.12);
+      outline: 1px solid rgba(70,130,180,0.5);
+      outline-offset: -1px;
+      cursor: pointer;
+    }
+
+    body.dark .guests li.selected,
+    body.dark .merged-row.selected {
+      background: rgba(70,130,180,0.18);
+      outline-color: rgba(100,160,210,0.6);
+    }
+
+    .guests li, .merged-row { cursor: pointer; }
+
     /* Highlight from search */
     .guests li.highlight {
       border: 1px solid rgba(212,175,55,0.5);
@@ -424,6 +441,48 @@
 
     body.dark .summary { color: #555; }
 
+    .group-btns-fixed {
+      position: fixed;
+      top: 16px;
+      right: 16px;
+      z-index: 100;
+      display: flex;
+      gap: 6px;
+    }
+
+    .group-btn-fixed {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.72rem;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 6px 14px;
+      border-radius: 8px;
+      border: 1px solid rgba(212,175,55,0.45);
+      background: #fff;
+      color: #b8942a;
+      cursor: pointer;
+      transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+    }
+
+    .group-btn-fixed:hover {
+      background: rgba(212,175,55,0.1);
+      border-color: #d4af37;
+      color: #9a7a1a;
+    }
+
+    body.dark .group-btn-fixed {
+      background: #1f1f1f;
+      border-color: rgba(212,175,55,0.3);
+      color: #c9a432;
+    }
+
+    body.dark .group-btn-fixed:hover {
+      background: rgba(212,175,55,0.12);
+      border-color: #d4af37;
+      color: #d4af37;
+    }
+
     @keyframes fadeUp {
       from { opacity: 0; transform: translateY(16px); }
       to   { opacity: 1; transform: translateY(0); }
@@ -438,6 +497,10 @@
   </style>
 </head>
 <body>
+  <div class="group-btns-fixed">
+    <button class="group-btn-fixed" onclick="groupSelected()">Group</button>
+    <button class="group-btn-fixed" onclick="ungroupSelected()">Ungroup</button>
+  </div>
   <div class="container">
 
     <header class="header">
@@ -520,6 +583,108 @@
       return result;
     }
 
+    // --- Selection ---
+    const selectedSeats = new Map(); // key: "tableId_seatIdx"
+
+    function toggleSelect(el) {
+      if (el.classList.contains('editing')) return;
+      const key = `${el.dataset.table}_${el.dataset.seat}`;
+      if (selectedSeats.has(key)) {
+        selectedSeats.delete(key);
+        el.classList.remove('selected');
+      } else {
+        selectedSeats.set(key, { tableId: parseInt(el.dataset.table), seatIdx: parseInt(el.dataset.seat) });
+        el.classList.add('selected');
+      }
+    }
+
+    function clearSelection() {
+      selectedSeats.forEach((_, key) => {
+        const [tId, si] = key.split('_');
+        const block = document.getElementById(`table-${tId}`);
+        if (!block) return;
+        block.querySelectorAll(`[data-table="${tId}"][data-seat="${si}"]`).forEach(el => el.classList.remove('selected'));
+      });
+      selectedSeats.clear();
+    }
+
+    function rerenderTableGuests(tableId) {
+      const block = document.getElementById(`table-${tableId}`);
+      if (!block) return;
+      const table = TABLES.find(t => t.id === tableId);
+      if (!table) return;
+      const ul = block.querySelector('ul.guests');
+      ul.innerHTML = '';
+      processGuests(table.guests).forEach(entry => {
+        if (entry.type === 'single') {
+          ul.appendChild(renderSingleLi(table.id, entry.seatIdx, entry.name));
+        } else {
+          ul.appendChild(renderMergedLi(table.id, entry.members));
+        }
+      });
+      updateCount(tableId);
+    }
+
+    // --- Group / Ungroup ---
+    function groupSelected() {
+      if (selectedSeats.size === 0) return;
+
+      const byTable = {};
+      selectedSeats.forEach(({ tableId, seatIdx }) => {
+        if (!byTable[tableId]) byTable[tableId] = [];
+        byTable[tableId].push(seatIdx);
+      });
+
+      const today = new Date().toISOString().slice(0, 10);
+
+      Object.entries(byTable).forEach(([tableIdStr, seats]) => {
+        const tableId = parseInt(tableIdStr);
+        const table = TABLES.find(t => t.id === tableId);
+        if (!table) return;
+
+        const names = seats.map(si => gName(table.guests[si])).filter(Boolean);
+        const groupVal = `${today}_${names.join('_')}`;
+
+        seats.forEach(seatIdx => {
+          const name = gName(table.guests[seatIdx]);
+          table.guests[seatIdx] = { name, group: groupVal };
+          fetch(`${SCRIPT_URL}?action=write&stoId=${tableId}&sediste=${seatIdx + 1}&ime=${encodeURIComponent(name)}&grupa=${encodeURIComponent(groupVal)}`)
+            .catch(err => console.warn('Sheets sync failed:', err));
+        });
+
+        rerenderTableGuests(tableId);
+      });
+
+      clearSelection();
+    }
+
+    function ungroupSelected() {
+      if (selectedSeats.size === 0) return;
+
+      const byTable = {};
+      selectedSeats.forEach(({ tableId, seatIdx }) => {
+        if (!byTable[tableId]) byTable[tableId] = [];
+        byTable[tableId].push(seatIdx);
+      });
+
+      Object.entries(byTable).forEach(([tableIdStr, seats]) => {
+        const tableId = parseInt(tableIdStr);
+        const table = TABLES.find(t => t.id === tableId);
+        if (!table) return;
+
+        seats.forEach(seatIdx => {
+          const name = gName(table.guests[seatIdx]);
+          table.guests[seatIdx] = name;
+          fetch(`${SCRIPT_URL}?action=write&stoId=${tableId}&sediste=${seatIdx + 1}&ime=${encodeURIComponent(name)}&grupa=`)
+            .catch(err => console.warn('Sheets sync failed:', err));
+        });
+
+        rerenderTableGuests(tableId);
+      });
+
+      clearSelection();
+    }
+
     // --- Theme ---
     function toggleTheme() {
       const dark = document.body.classList.toggle('dark');
@@ -547,6 +712,10 @@
       el.dataset.seat = seatIdx;
       el.querySelector('.edit-icon').addEventListener('click', e => { e.stopPropagation(); startEdit(el); });
       el.addEventListener('dblclick', () => startEdit(el));
+      el.addEventListener('click', e => {
+        if (e.target.closest('.edit-icon, .save-btn, .cancel-btn, .guest-input')) return;
+        toggleSelect(el);
+      });
     }
 
     function renderSingleLi(tableId, seatIdx, name) {

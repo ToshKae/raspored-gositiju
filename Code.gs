@@ -39,6 +39,7 @@ function handleWrite(params) {
   for (let i = 1; i < data.length; i++) {
     if (parseInt(data[i][stoIdCol]) === stoId && parseInt(data[i][sedisteCol]) === sediste) {
       sheet.getRange(i + 1, imeCol + 1).setValue(ime);
+      sheet.getRange(i + 1, grupaCol + 1).setValue(grupa);
       return jsonResponse({ ok: true });
     }
   }
