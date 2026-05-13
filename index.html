@@ -643,7 +643,7 @@
         if (!table) return;
 
         const names = seats.map(si => gName(table.guests[si])).filter(Boolean);
-        const groupVal = `${today}_${names.join('_')}`;
+        const groupVal = `${tableId}_${today}_${names.join('_')}`;
 
         seats.forEach(seatIdx => {
           const name = gName(table.guests[seatIdx]);
