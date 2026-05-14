@@ -475,8 +475,16 @@
 
     /* Mini mapa */
     .mini-map-wrap {
-      margin-bottom: 24px;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      background: #fdf6f0;
+      padding: 12px 0 8px;
+      margin-bottom: 16px;
       animation: fadeUp 0.8s ease-out 0.05s both;
+    }
+    body.dark .mini-map-wrap {
+      background: #0e0e0e;
     }
 
     .mini-map-header {
