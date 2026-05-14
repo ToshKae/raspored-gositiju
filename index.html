@@ -473,6 +473,132 @@
 
     body.dark .search-result-table { color: #c9a432; }
 
+    /* Mini mapa */
+    .mini-map-wrap {
+      margin-bottom: 24px;
+      animation: fadeUp 0.8s ease-out 0.05s both;
+    }
+
+    .mini-map-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 8px;
+    }
+
+    .mini-map-label {
+      font-size: 0.68rem;
+      color: #bbb;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    body.dark .mini-map-label { color: #555; }
+
+    .show-all-btn {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.68rem;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 4px 10px;
+      border-radius: 6px;
+      border: 1px solid rgba(212,175,55,0.4);
+      background: transparent;
+      color: #b8942a;
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s;
+    }
+
+    .show-all-btn:hover, .show-all-btn.active {
+      background: rgba(212,175,55,0.12);
+      color: #9a7a1a;
+      border-color: #d4af37;
+    }
+
+    body.dark .show-all-btn { color: #c9a432; border-color: rgba(212,175,55,0.3); }
+    body.dark .show-all-btn:hover, body.dark .show-all-btn.active { background: rgba(212,175,55,0.15); color: #d4af37; }
+
+    .mini-map {
+      position: relative;
+      width: 100%;
+      height: 0;
+      padding-bottom: 42%;
+    }
+
+    .mini-table {
+      position: absolute;
+      width: 9.5%;
+      aspect-ratio: 1;
+      transform: translate(-50%, -50%);
+      border-radius: 50%;
+      border: 2px solid #d4af37;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Playfair Display', serif;
+      font-size: 0.7rem;
+      font-weight: 600;
+      color: #d4af37;
+      background: #fdf6f0;
+      cursor: pointer;
+      transition: background 0.15s, color 0.15s, border-color 0.15s;
+      user-select: none;
+    }
+
+    body.dark .mini-table {
+      background: #141414;
+      border-color: rgba(212,175,55,0.6);
+    }
+
+    .mini-table:hover { background: rgba(212,175,55,0.12); }
+    body.dark .mini-table:hover { background: rgba(212,175,55,0.15); }
+
+    .mini-table.active,
+    body.dark .mini-table.active,
+    .mini-mlad.active,
+    body.dark .mini-mlad.active {
+      background: #d4af37 !important;
+      color: #1a1a1a !important;
+      border-color: #d4af37 !important;
+    }
+
+    .mini-stub {
+      position: absolute;
+      width: 3.5%;
+      aspect-ratio: 1;
+      transform: translate(-50%, -50%);
+      background: #c8b89a;
+      border-radius: 3px;
+    }
+
+    body.dark .mini-stub { background: #3a3020; }
+
+    .mini-mlad {
+      position: absolute;
+      transform: translate(-50%, -50%);
+      width: 9.5%;
+      height: 5%;
+      border: 2px solid #d4af37;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.48rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      color: #d4af37;
+      background: #fdf6f0;
+      cursor: pointer;
+      transition: background 0.15s, color 0.15s;
+      user-select: none;
+    }
+
+    body.dark .mini-mlad { background: #141414; }
+    .mini-mlad:hover { background: rgba(212,175,55,0.12); }
+    .mini-mlad.active { background: #d4af37; color: #1a1a1a; }
+
     .no-results {
       text-align: center;
       padding: 40px 0;
@@ -581,6 +707,48 @@
     </div>
 
     <div class="search-results" id="searchResults"></div>
+
+    <div class="mini-map-wrap">
+      <div class="mini-map-header">
+        <span class="mini-map-label">Sala</span>
+        <button class="show-all-btn active" id="showAllBtn" onclick="showAll()">Show All</button>
+      </div>
+      <div class="mini-map">
+        <!-- Red 1 -->
+        <div class="mini-table" style="left:9%;top:13%" data-table="20" onclick="filterByTable(20)">20</div>
+        <div class="mini-table" style="left:22.4%;top:13%" data-table="17" onclick="filterByTable(17)">17</div>
+        <div class="mini-table" style="left:35.8%;top:13%" data-table="14" onclick="filterByTable(14)">14</div>
+        <div class="mini-table" style="left:49.3%;top:13%" data-table="11" onclick="filterByTable(11)">11</div>
+        <div class="mini-table" style="left:62.7%;top:13%" data-table="9" onclick="filterByTable(9)">9</div>
+        <div class="mini-table" style="left:76.1%;top:13%" data-table="6" onclick="filterByTable(6)">6</div>
+        <div class="mini-table" style="left:89.5%;top:13%" data-table="3" onclick="filterByTable(3)">3</div>
+        <!-- Stub -->
+        <div class="mini-stub" style="left:49.3%;top:31%"></div>
+        <!-- Red 2 -->
+        <div class="mini-table" style="left:9%;top:40%" data-table="19" onclick="filterByTable(19)">19</div>
+        <div class="mini-table" style="left:22.4%;top:40%" data-table="16" onclick="filterByTable(16)">16</div>
+        <div class="mini-table" style="left:35.8%;top:40%" data-table="13" onclick="filterByTable(13)">13</div>
+        <div class="mini-table" style="left:49.3%;top:40%" data-table="10" onclick="filterByTable(10)">10</div>
+        <div class="mini-table" style="left:62.7%;top:40%" data-table="8" onclick="filterByTable(8)">8</div>
+        <div class="mini-table" style="left:76.1%;top:40%" data-table="5" onclick="filterByTable(5)">5</div>
+        <div class="mini-table" style="left:89.5%;top:40%" data-table="2" onclick="filterByTable(2)">2</div>
+        <!-- Red 3 -->
+        <div class="mini-table" style="left:9%;top:67%" data-table="18" onclick="filterByTable(18)">18</div>
+        <div class="mini-table" style="left:22.4%;top:67%" data-table="15" onclick="filterByTable(15)">15</div>
+        <div class="mini-table" style="left:35.8%;top:67%" data-table="12" onclick="filterByTable(12)">12</div>
+        <div class="mini-stub" style="left:49.3%;top:67%"></div>
+        <div class="mini-table" style="left:62.7%;top:67%" data-table="7" onclick="filterByTable(7)">7</div>
+        <div class="mini-table" style="left:76.1%;top:67%" data-table="4" onclick="filterByTable(4)">4</div>
+        <div class="mini-table" style="left:89.5%;top:67%" data-table="1" onclick="filterByTable(1)">1</div>
+        <!-- Red 4 -->
+        <div class="mini-table" style="left:9%;top:94%" data-table="23" onclick="filterByTable(23)">23</div>
+        <div class="mini-table" style="left:22.4%;top:94%" data-table="22" onclick="filterByTable(22)">22</div>
+        <div class="mini-table" style="left:35.8%;top:94%" data-table="21" onclick="filterByTable(21)">21</div>
+        <!-- Mladenački sto -->
+        <div class="mini-mlad" style="left:89.5%;top:94%" data-table="0" onclick="filterByTable(0)">mlad.</div>
+      </div>
+    </div>
+
     <div class="summary" id="summary"></div>
     <div class="timeline" id="timeline"></div>
     <div class="no-results" id="noResults" style="display:none;">Nije pronađen nijedan gost.</div>
@@ -636,6 +804,28 @@
         }
       });
       return result;
+    }
+
+    // --- Mini map filter ---
+    let activeTableFilter = null;
+
+    function filterByTable(id) {
+      if (activeTableFilter === id) { showAll(); return; }
+      activeTableFilter = id;
+      document.querySelectorAll('.block').forEach(b => b.classList.toggle('hidden', b.id !== `table-${id}`));
+      document.querySelectorAll('.mini-table, .mini-mlad').forEach(c => c.classList.toggle('active', parseInt(c.dataset.table) === id));
+      document.getElementById('showAllBtn').classList.remove('active');
+      document.getElementById('searchInput').value = '';
+      document.getElementById('searchResults').style.display = 'none';
+      document.getElementById('searchResults').innerHTML = '';
+      document.getElementById('noResults').style.display = 'none';
+    }
+
+    function showAll() {
+      activeTableFilter = null;
+      document.querySelectorAll('.block').forEach(b => b.classList.remove('hidden'));
+      document.querySelectorAll('.mini-table, .mini-mlad').forEach(c => c.classList.remove('active'));
+      document.getElementById('showAllBtn').classList.add('active');
     }
 
     // --- Selection ---
@@ -948,6 +1138,13 @@
       let anyVisible = false;
       const hits = [];
 
+      // reset map filter when searching
+      if (q) {
+        activeTableFilter = null;
+        document.querySelectorAll('.mini-table, .mini-mlad').forEach(c => c.classList.remove('active'));
+        document.getElementById('showAllBtn').classList.add('active');
+      }
+
       document.querySelectorAll('.block').forEach(block => {
         if (!q) {
           block.classList.remove('hidden');
@@ -957,11 +1154,12 @@
         }
         let match = false;
         const tableLabel = block.querySelector('.block-label')?.textContent || '';
+        const tableId = parseInt(block.id.replace('table-', ''));
 
         block.querySelectorAll('.guests li[data-name]').forEach(li => {
           const hit = li.dataset.name.includes(q);
           li.classList.toggle('highlight', hit);
-          if (hit) { match = true; hits.push({ name: li.querySelector('.guest-name')?.textContent, table: tableLabel }); }
+          if (hit) { match = true; hits.push({ name: li.querySelector('.guest-name')?.textContent, table: tableLabel, tableId }); }
         });
 
         block.querySelectorAll('.guests li.merged').forEach(li => {
@@ -969,7 +1167,7 @@
             .map(r => r.querySelector('.guest-name')?.textContent).filter(Boolean);
           li.querySelectorAll('.merged-row[data-name]').forEach(row => {
             const hit = row.dataset.name.includes(q);
-            if (hit) { match = true; hits.push({ name: row.querySelector('.guest-name')?.textContent, table: tableLabel, group: allNames }); }
+            if (hit) { match = true; hits.push({ name: row.querySelector('.guest-name')?.textContent, table: tableLabel, tableId, group: allNames }); }
           });
           const anyHit = li.dataset.names.includes(q);
           li.classList.toggle('highlight', anyHit);
@@ -984,7 +1182,7 @@
         resultsEl.innerHTML = '';
       } else {
         resultsEl.innerHTML = hits.map((h, i) =>
-          `<div class="search-result-card" style="animation-delay:${i * 0.05}s">
+          `<div class="search-result-card" style="animation-delay:${i * 0.05}s;cursor:pointer" onclick="filterByTable(${h.tableId})">
             <div class="search-result-left">
               <span class="search-result-name">${h.name || '—'}</span>
               ${h.group && h.group.length > 1 ? `<span class="search-result-group">${h.group.join(', ')}</span>` : ''}
