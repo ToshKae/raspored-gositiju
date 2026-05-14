@@ -523,7 +523,7 @@
       position: relative;
       width: 100%;
       height: 0;
-      padding-bottom: 42%;
+      padding-bottom: 60%;
     }
 
     .mini-table {
@@ -537,13 +537,29 @@
       align-items: center;
       justify-content: center;
       font-family: 'Playfair Display', serif;
-      font-size: 0.7rem;
+      font-size: 0.81rem;
       font-weight: 600;
       color: #d4af37;
       background: #fdf6f0;
       cursor: pointer;
       transition: background 0.15s, color 0.15s, border-color 0.15s;
       user-select: none;
+    }
+
+    .mini-table.odd {
+      box-shadow: 0 0 0 3px #fdf6f0, 0 0 0 5px #d4af37;
+    }
+
+    body.dark .mini-table.odd {
+      box-shadow: 0 0 0 3px #141414, 0 0 0 5px rgba(212,175,55,0.6);
+    }
+
+    .mini-table.hybrid {
+      border: 4px solid #b8942a;
+    }
+
+    body.dark .mini-table.hybrid {
+      border: 4px solid #b8942a;
     }
 
     body.dark .mini-table {
@@ -715,37 +731,37 @@
       </div>
       <div class="mini-map">
         <!-- Red 1 -->
-        <div class="mini-table" style="left:9%;top:13%" data-table="20" onclick="filterByTable(20)">20</div>
-        <div class="mini-table" style="left:22.4%;top:13%" data-table="17" onclick="filterByTable(17)">17</div>
-        <div class="mini-table" style="left:35.8%;top:13%" data-table="14" onclick="filterByTable(14)">14</div>
-        <div class="mini-table" style="left:49.3%;top:13%" data-table="11" onclick="filterByTable(11)">11</div>
-        <div class="mini-table" style="left:62.7%;top:13%" data-table="9" onclick="filterByTable(9)">9</div>
-        <div class="mini-table" style="left:76.1%;top:13%" data-table="6" onclick="filterByTable(6)">6</div>
-        <div class="mini-table" style="left:89.5%;top:13%" data-table="3" onclick="filterByTable(3)">3</div>
+        <div class="mini-table" style="left:9%;top:10%" data-table="20" onclick="filterByTable(20)">20</div>
+        <div class="mini-table" style="left:22.4%;top:10%" data-table="17" onclick="filterByTable(17)">17</div>
+        <div class="mini-table" style="left:35.8%;top:10%" data-table="14" onclick="filterByTable(14)">14</div>
+        <div class="mini-table" style="left:49.3%;top:10%" data-table="11" onclick="filterByTable(11)">11</div>
+        <div class="mini-table" style="left:62.7%;top:10%" data-table="9" onclick="filterByTable(9)">9</div>
+        <div class="mini-table" style="left:76.1%;top:10%" data-table="6" onclick="filterByTable(6)">6</div>
+        <div class="mini-table" style="left:89.5%;top:10%" data-table="3" onclick="filterByTable(3)">3</div>
         <!-- Stub -->
-        <div class="mini-stub" style="left:49.3%;top:31%"></div>
+        <div class="mini-stub" style="left:49.3%;top:23%"></div>
         <!-- Red 2 -->
-        <div class="mini-table" style="left:9%;top:40%" data-table="19" onclick="filterByTable(19)">19</div>
-        <div class="mini-table" style="left:22.4%;top:40%" data-table="16" onclick="filterByTable(16)">16</div>
-        <div class="mini-table" style="left:35.8%;top:40%" data-table="13" onclick="filterByTable(13)">13</div>
-        <div class="mini-table" style="left:49.3%;top:40%" data-table="10" onclick="filterByTable(10)">10</div>
-        <div class="mini-table" style="left:62.7%;top:40%" data-table="8" onclick="filterByTable(8)">8</div>
-        <div class="mini-table" style="left:76.1%;top:40%" data-table="5" onclick="filterByTable(5)">5</div>
-        <div class="mini-table" style="left:89.5%;top:40%" data-table="2" onclick="filterByTable(2)">2</div>
+        <div class="mini-table" style="left:9%;top:37%" data-table="19" onclick="filterByTable(19)">19</div>
+        <div class="mini-table" style="left:22.4%;top:37%" data-table="16" onclick="filterByTable(16)">16</div>
+        <div class="mini-table" style="left:35.8%;top:37%" data-table="13" onclick="filterByTable(13)">13</div>
+        <div class="mini-table" style="left:49.3%;top:37%" data-table="10" onclick="filterByTable(10)">10</div>
+        <div class="mini-table" style="left:62.7%;top:37%" data-table="8" onclick="filterByTable(8)">8</div>
+        <div class="mini-table" style="left:76.1%;top:37%" data-table="5" onclick="filterByTable(5)">5</div>
+        <div class="mini-table" style="left:89.5%;top:37%" data-table="2" onclick="filterByTable(2)">2</div>
         <!-- Red 3 -->
-        <div class="mini-table" style="left:9%;top:67%" data-table="18" onclick="filterByTable(18)">18</div>
-        <div class="mini-table" style="left:22.4%;top:67%" data-table="15" onclick="filterByTable(15)">15</div>
-        <div class="mini-table" style="left:35.8%;top:67%" data-table="12" onclick="filterByTable(12)">12</div>
-        <div class="mini-stub" style="left:49.3%;top:67%"></div>
-        <div class="mini-table" style="left:62.7%;top:67%" data-table="7" onclick="filterByTable(7)">7</div>
-        <div class="mini-table" style="left:76.1%;top:67%" data-table="4" onclick="filterByTable(4)">4</div>
-        <div class="mini-table" style="left:89.5%;top:67%" data-table="1" onclick="filterByTable(1)">1</div>
+        <div class="mini-table" style="left:9%;top:64%" data-table="18" onclick="filterByTable(18)">18</div>
+        <div class="mini-table" style="left:22.4%;top:64%" data-table="15" onclick="filterByTable(15)">15</div>
+        <div class="mini-table" style="left:35.8%;top:64%" data-table="12" onclick="filterByTable(12)">12</div>
+        <div class="mini-stub" style="left:49.3%;top:64%"></div>
+        <div class="mini-table" style="left:62.7%;top:64%" data-table="7" onclick="filterByTable(7)">7</div>
+        <div class="mini-table" style="left:76.1%;top:64%" data-table="4" onclick="filterByTable(4)">4</div>
+        <div class="mini-table" style="left:89.5%;top:64%" data-table="1" onclick="filterByTable(1)">1</div>
         <!-- Red 4 -->
-        <div class="mini-table" style="left:9%;top:94%" data-table="23" onclick="filterByTable(23)">23</div>
-        <div class="mini-table" style="left:22.4%;top:94%" data-table="22" onclick="filterByTable(22)">22</div>
-        <div class="mini-table" style="left:35.8%;top:94%" data-table="21" onclick="filterByTable(21)">21</div>
+        <div class="mini-table" style="left:9%;top:85%" data-table="23" onclick="filterByTable(23)">23</div>
+        <div class="mini-table" style="left:22.4%;top:85%" data-table="22" onclick="filterByTable(22)">22</div>
+        <div class="mini-table" style="left:35.8%;top:85%" data-table="21" onclick="filterByTable(21)">21</div>
         <!-- Mladenački sto -->
-        <div class="mini-mlad" style="left:89.5%;top:94%" data-table="0" onclick="filterByTable(0)">mlad.</div>
+        <div class="mini-mlad" style="left:89.5%;top:85%" data-table="0" onclick="filterByTable(0)">mlad.</div>
       </div>
     </div>
 
@@ -805,6 +821,14 @@
       });
       return result;
     }
+
+    // Označi hibridne i neparne stolove na mini mapi
+    const hybridTables = new Set([4, 7]);
+    document.querySelectorAll('.mini-table').forEach(el => {
+      const num = parseInt(el.dataset.table);
+      if (hybridTables.has(num)) el.classList.add('hybrid');
+      else if (num % 2 === 1) el.classList.add('odd');
+    });
 
     // --- Mini map filter ---
     let activeTableFilter = null;
