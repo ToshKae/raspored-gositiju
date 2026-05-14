@@ -475,16 +475,8 @@
 
     /* Mini mapa */
     .mini-map-wrap {
-      position: sticky;
-      top: 0;
-      z-index: 10;
-      background: #fdf6f0;
-      padding: 12px 0 8px;
-      margin-bottom: 16px;
+      margin-bottom: 24px;
       animation: fadeUp 0.8s ease-out 0.05s both;
-    }
-    body.dark .mini-map-wrap {
-      background: #0e0e0e;
     }
 
     .mini-map-header {
@@ -847,7 +839,9 @@
     function filterByTable(id) {
       if (activeTableFilter === id) { showAll(); return; }
       activeTableFilter = id;
+      const y = window.scrollY;
       document.querySelectorAll('.block').forEach(b => b.classList.toggle('hidden', b.id !== `table-${id}`));
+      requestAnimationFrame(() => window.scrollTo(0, y));
       document.querySelectorAll('.mini-table, .mini-mlad').forEach(c => c.classList.toggle('active', parseInt(c.dataset.table) === id));
       document.getElementById('showAllBtn').classList.remove('active');
       document.getElementById('searchInput').value = '';
@@ -857,8 +851,10 @@
     }
 
     function showAll() {
+      const y = window.scrollY;
       activeTableFilter = null;
       document.querySelectorAll('.block').forEach(b => b.classList.remove('hidden'));
+      requestAnimationFrame(() => window.scrollTo(0, y));
       document.querySelectorAll('.mini-table, .mini-mlad').forEach(c => c.classList.remove('active'));
       document.getElementById('showAllBtn').classList.add('active');
     }
