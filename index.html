@@ -419,6 +419,49 @@
       box-shadow: 0 0 10px rgba(212,175,55,0.15);
     }
 
+    .search-results {
+      display: none;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 24px;
+    }
+
+    .search-result-card {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 14px;
+      background: #fff;
+      border-radius: 10px;
+      border-left: 3px solid #d4af37;
+      box-shadow: 0 1px 6px rgba(0,0,0,0.07);
+      animation: fadeUp 0.25s ease-out both;
+    }
+
+    body.dark .search-result-card {
+      background: #1f1f1f;
+      box-shadow: 0 1px 6px rgba(0,0,0,0.25);
+    }
+
+    .search-result-name {
+      font-size: 0.95rem;
+      font-weight: 500;
+      color: #1a1a1a;
+    }
+
+    body.dark .search-result-name { color: #f0f0f0; }
+
+    .search-result-table {
+      font-size: 0.78rem;
+      font-weight: 500;
+      color: #b8942a;
+      letter-spacing: 0.05em;
+      white-space: nowrap;
+      margin-left: 12px;
+    }
+
+    body.dark .search-result-table { color: #c9a432; }
+
     .no-results {
       text-align: center;
       padding: 40px 0;
@@ -526,6 +569,7 @@
       />
     </div>
 
+    <div class="search-results" id="searchResults"></div>
     <div class="summary" id="summary"></div>
     <div class="timeline" id="timeline"></div>
     <div class="no-results" id="noResults" style="display:none;">Nije pronađen nijedan gost.</div>
@@ -889,7 +933,9 @@
     // --- Search ---
     function filterGuests(query) {
       const q = query.trim().toLowerCase();
+      const resultsEl = document.getElementById('searchResults');
       let anyVisible = false;
+      const hits = [];
 
       document.querySelectorAll('.block').forEach(block => {
         if (!q) {
@@ -899,21 +945,39 @@
           return;
         }
         let match = false;
-        // single cells
+        const tableLabel = block.querySelector('.block-label')?.textContent || '';
+
         block.querySelectorAll('.guests li[data-name]').forEach(li => {
           const hit = li.dataset.name.includes(q);
           li.classList.toggle('highlight', hit);
-          if (hit) match = true;
+          if (hit) { match = true; hits.push({ name: li.querySelector('.guest-name')?.textContent, table: tableLabel }); }
         });
-        // merged cells — highlight whole li if any member matches
+
         block.querySelectorAll('.guests li.merged').forEach(li => {
-          const hit = li.dataset.names.includes(q);
-          li.classList.toggle('highlight', hit);
-          if (hit) match = true;
+          li.querySelectorAll('.merged-row[data-name]').forEach(row => {
+            const hit = row.dataset.name.includes(q);
+            if (hit) { match = true; hits.push({ name: row.querySelector('.guest-name')?.textContent, table: tableLabel }); }
+          });
+          const anyHit = li.dataset.names.includes(q);
+          li.classList.toggle('highlight', anyHit);
         });
+
         block.classList.toggle('hidden', !match);
         if (match) anyVisible = true;
       });
+
+      if (!q) {
+        resultsEl.style.display = 'none';
+        resultsEl.innerHTML = '';
+      } else {
+        resultsEl.innerHTML = hits.map((h, i) =>
+          `<div class="search-result-card" style="animation-delay:${i * 0.05}s">
+            <span class="search-result-name">${h.name || '—'}</span>
+            <span class="search-result-table">${h.table}</span>
+          </div>`
+        ).join('');
+        resultsEl.style.display = hits.length ? 'flex' : 'none';
+      }
 
       document.getElementById('noResults').style.display = (q && !anyVisible) ? 'block' : 'none';
     }
