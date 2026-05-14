@@ -443,13 +443,24 @@
       box-shadow: 0 1px 6px rgba(0,0,0,0.25);
     }
 
+    .search-result-left { display: flex; flex-direction: column; gap: 2px; }
+
     .search-result-name {
-      font-size: 0.95rem;
+      font-size: 1.1rem;
       font-weight: 500;
       color: #1a1a1a;
     }
 
     body.dark .search-result-name { color: #f0f0f0; }
+
+    .search-result-group {
+      font-size: 0.88rem;
+      font-weight: 300;
+      color: #aaa;
+      font-family: 'Montserrat', sans-serif;
+    }
+
+    body.dark .search-result-group { color: #666; }
 
     .search-result-table {
       font-size: 0.78rem;
@@ -954,9 +965,11 @@
         });
 
         block.querySelectorAll('.guests li.merged').forEach(li => {
+          const allNames = [...li.querySelectorAll('.merged-row[data-name]')]
+            .map(r => r.querySelector('.guest-name')?.textContent).filter(Boolean);
           li.querySelectorAll('.merged-row[data-name]').forEach(row => {
             const hit = row.dataset.name.includes(q);
-            if (hit) { match = true; hits.push({ name: row.querySelector('.guest-name')?.textContent, table: tableLabel }); }
+            if (hit) { match = true; hits.push({ name: row.querySelector('.guest-name')?.textContent, table: tableLabel, group: allNames }); }
           });
           const anyHit = li.dataset.names.includes(q);
           li.classList.toggle('highlight', anyHit);
@@ -972,7 +985,10 @@
       } else {
         resultsEl.innerHTML = hits.map((h, i) =>
           `<div class="search-result-card" style="animation-delay:${i * 0.05}s">
-            <span class="search-result-name">${h.name || '—'}</span>
+            <div class="search-result-left">
+              <span class="search-result-name">${h.name || '—'}</span>
+              ${h.group && h.group.length > 1 ? `<span class="search-result-group">${h.group.join(', ')}</span>` : ''}
+            </div>
             <span class="search-result-table">${h.table}</span>
           </div>`
         ).join('');
